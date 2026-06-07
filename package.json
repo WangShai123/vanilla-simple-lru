@@ -1,0 +1,55 @@
+{
+  "name": "vanilla-simple-lru",
+  "version": "0.2.0",
+  "private": false,
+  "description": "A simple LRU cache implementation in vanilla JavaScript.",
+  "keywords": [
+    "cache",
+    "javascript",
+    "lru",
+    "vanilla"
+  ],
+  "homepage": "https://github.com/WangShai123/vanilla-simple-lru",
+  "bugs": {
+    "url": "https://github.com/WangShai123/vanilla-simple-lru/issues"
+  },
+  "license": "ISC",
+  "author": "Wang Shai <hiwangshai@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WangShai123/vanilla-simple-lru.git"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "src",
+    "tests",
+    "README.md",
+    "package.json",
+    "vite.config.ts"
+  ],
+  "type": "module",
+  "main": "./dist/lru.mjs",
+  "module": "./dist/lru.mjs",
+  "browser": "dist/lru.umd.js",
+  "unpkg": "dist/lru.umd.js",
+  "exports": {
+    ".": "./dist/lru.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp dev",
+    "test": "vp test",
+    "check": "vp check",
+    "lint": "vp lint",
+    "prepublishOnly": "vp run build"
+  },
+  "devDependencies": {
+    "vite-plus": "^0.1.23"
+  },
+  "fullname": "vanilla-simple-lru"
+}
