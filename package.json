@@ -1,6 +1,6 @@
 {
   "name": "vanilla-simple-lru",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "description": "A simple LRU cache implementation in vanilla JavaScript.",
   "keywords": [

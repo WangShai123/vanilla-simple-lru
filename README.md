@@ -4,6 +4,9 @@
 
 ## 文档
 
+- `lru.mjs`: ESM 模块
+- `lru.umd.js`: UMD 模块，GlobalName: `lru`
+
 ### Api
 
 [中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/api_Zh.md)
