@@ -9,18 +9,18 @@
 
 ### Api
 
-[中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/api_Zh.md)
-[English Documentation](https://github.com/WangShai123/vanilla-simple-lru/docs/api_En.md)
+- [中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/api_Zh.md)
+- [English Documentation](https://github.com/WangShai123/vanilla-simple-lru/docs/api_En.md)
 
 ### Design
 
-[中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/design_Zh.md)
-[English Documentation](https://github.com/WangShai123/vanilla-simple-lru/docs/design_En.md)
+- [中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/design_Zh.md)
+- [English Documentation](https://github.com/WangShai123/vanilla-simple-lru/docs/design_En.md)
 
 ## 测试
 
-文件：`tests/lru.test.js`
-运行：`vp test`
+- 文件：`tests/lru.test.js`
+- 运行：`vp test`
 
 ## 兼容
 
