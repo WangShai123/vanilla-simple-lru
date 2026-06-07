@@ -1,30 +1,25 @@
 # Simple LRU Cache
 
-`vanilla-simple-lru` 是一个零依赖的浏览器端 JavaScript LRU 缓存。导出的 `Lru` 类继承自原生 `Map`，因此保留了熟悉的 `Map` 接口，同时添加了有界容量、LRU 提升、可选过期和驱逐钩子功能。
+`vanilla-simple-lru` is a zero-dependency, browser-side JavaScript LRU cache. The exported `Lru` class inherits from the native `Map`, preserving the familiar `Map` interface while adding bounded capacity, LRU promotion, optional expiration, and eviction hooks functionality.
 
-## 文档
+## Build Outputs
 
-- `lru.mjs`: ESM 模块
-- `lru.umd.js`: UMD 模块，GlobalName: `lru`
+- `lru.mjs`: ESM Module.
+- `lru.umd.js`: UMD，GlobalName: `lru`.
 
-### Api
+### Documentation
 
-- [中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/api_Zh.md)
-- [English Documentation](https://github.com/WangShai123/vanilla-simple-lru/docs/api_En.md)
+- [Api Documentation](./docs/api.md)
+- [Design Documentation](./docs/design.md)
 
-### Design
+## Test
 
-- [中文文档](https://github.com/WangShai123/vanilla-simple-lru/docs/design_Zh.md)
-- [English Documentation](https://github.com/WangShai123/vanilla-simple-lru/docs/design_En.md)
+- File: `tests/lru.test.js`
+- Run: `vp test`
 
-## 测试
+## Compatibility
 
-- 文件：`tests/lru.test.js`
-- 运行：`vp test`
-
-## 兼容
-
-为了兼容我的之前的cache相关项目，因此保留了两个参数别名：`max`和`ttl`。对应关系：
+To maintain compatibility with my previous cache-related projects, two parameter aliases are retained: `max` and `ttl`. The mapping is as follows:
 
 - `max` -> `maxSize`
 - `ttl` -> `maxAge`
