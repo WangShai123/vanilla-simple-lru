@@ -1,9 +1,6 @@
 # vanilla-simple-lru API
 
-`vanilla-simple-lru` is a zero-dependency LRU cache for browser-side
-JavaScript. The exported `Lru` class extends the native `Map`, so it keeps the
-familiar `Map` surface while adding bounded capacity, LRU promotion, optional
-expiration, and eviction hooks.
+`vanilla-simple-lru` is a zero-dependency LRU cache for browser-side JavaScript. The exported `Lru` class extends the native `Map`, so it keeps the familiar `Map` surface while adding bounded capacity, LRU promotion, optional expiration, and eviction hooks.
 
 ```js
 import Lru from 'vanilla-simple-lru';
@@ -38,21 +35,17 @@ Type: `number`
 
 Default: `Infinity`
 
-How long each entry stays valid, in milliseconds. Use `Infinity` for entries
-that do not expire by time.
+How long each entry stays valid, in milliseconds. Use `Infinity` for entries that do not expire by time.
 
 ### options.onEviction
 
 Type: `(key, value) => void`
 
-Called when entries are evicted because the cache rotates, when `evict()` is
-called, or when an expired entry is lazily removed. Manual `delete()` and
-`clear()` do not call this hook.
+Called when entries are evicted because the cache rotates, when `evict()` is called, or when an expired entry is lazily removed. Manual `delete()` and `clear()` do not call this hook.
 
 ### Migration aliases
 
-For migration from the earlier cache project, `{ max, ttl }` are accepted as
-aliases for `{ maxSize, maxAge }`.
+For migration from the earlier cache project, `{ max, ttl }` are accepted as aliases for `{ maxSize, maxAge }`.
 
 ## Map API
 
@@ -73,9 +66,7 @@ cache.forEach((value, key, cache) => {});
 
 Like native `Map#get`, missing or expired entries return `undefined`.
 
-Expiration is lazy. The `size` getter reports the stored item count and may
-include expired entries until a read, write-side rotation, or iteration removes
-them.
+Expiration is lazy. The `size` getter reports the stored item count and may include expired entries until a read, write-side rotation, or iteration removes them.
 
 ## LRU Methods
 
@@ -95,17 +86,13 @@ Returns the value and promotes the entry to the recent cache segment.
 
 ### peek(key)
 
-Returns the value without changing recency. Use this when inspection should not
-make the entry harder to evict.
+Returns the value without changing recency. Use this when inspection should not make the entry harder to evict.
 
 ### expiresIn(key)
 
-Returns the remaining lifetime in milliseconds, `Infinity`, or `undefined` if
-the key is missing.
+Returns the remaining lifetime in milliseconds, `Infinity`, or `undefined` if the key is missing.
 
-This method does not mark the entry as recently used and does not trigger lazy
-expiration. It can return a negative number when an entry is already expired but
-has not yet been removed by a read, write, or iteration.
+This method does not mark the entry as recently used and does not trigger lazy expiration. It can return a negative number when an entry is already expired but has not yet been removed by a read, write, or iteration.
 
 ### resize(maxSize)
 
@@ -136,11 +123,6 @@ The cache uses a two-`Map` design:
 - `cache`: receives new writes and entries promoted by `get()`.
 - `oldCache`: holds the previous generation.
 
-When the current segment reaches `maxSize`, it becomes the old segment and the
-previous old segment is evicted. This keeps normal operations very cheap:
-`get()`, `set()`, `has()`, and `delete()` remain close to native `Map`
-operations with small constant overhead.
+When the current segment reaches `maxSize`, it becomes the old segment and the previous old segment is evicted. This keeps normal operations very cheap: `get()`, `set()`, `has()`, and `delete()` remain close to native `Map` operations with small constant overhead.
 
-This design is intentionally lightweight and browser-friendly. It does not use
-timers to remove expired entries; expiration is lazy and is checked when keys are
-read, inspected, or iterated.
+This design is intentionally lightweight and browser-friendly. It does not use timers to remove expired entries; expiration is lazy and is checked when keys are read, inspected, or iterated.

@@ -160,7 +160,7 @@ npm run build
 
 讲解要点：
 
-- 源码在 `src/lru.js`。
+- 源码入口在 `src/index.js`。
 - 产物输出到 `dist/`。
 - 包入口由 `package.json` 的 `exports` 指定。
 

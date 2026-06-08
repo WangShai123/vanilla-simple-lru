@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 
-import Lru from '../src/lru.js';
+import Lru from '../src/index.js';
 
 const delay = (milliseconds) =>
   new Promise((resolve) => {

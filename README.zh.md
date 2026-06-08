@@ -2,10 +2,34 @@
 
 `vanilla-simple-lru` 是一个零依赖的浏览器端 JavaScript LRU 缓存。导出的 `Lru` 类继承自原生 `Map`，因此保留了熟悉的 `Map` 接口，同时添加了有界容量、LRU 提升、可选过期和驱逐钩子功能。
 
-## 打包结果
+## 安装
 
-- `lru.mjs`: ESM 模块
-- `lru.umd.js`: UMD 模块，GlobalName: `lru`
+npm:
+
+```bash
+npm install vanilla-simple-lru
+```
+
+script:
+
+```html
+<!-- umd 全局变量 Lru -->
+<script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
+<script>
+  const cache = new Lru({
+    maxSize: 1000,
+    maxAge: 1000 * 60 * 5,
+    onEviction(key, value) {
+      console.warn('已驱逐:', key, value);
+    },
+  });
+</script>
+
+<!-- esm 模块导入 -->
+<script type="module">
+  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.mjs';
+</script>
+```
 
 ### 文档
 

@@ -2,10 +2,10 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   pack: {
-    entry: 'src/lru.js',
+    entry: 'src/index.js',
     outDir: 'dist',
     format: ['esm', 'umd'],
-    globalName: 'lru',
+    globalName: 'Lru',
     target: 'es2020',
     platform: 'browser',
     minify: true,
