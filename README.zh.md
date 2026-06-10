@@ -27,7 +27,7 @@ script:
 
 <!-- esm 模块导入 -->
 <script type="module">
-  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.mjs';
+  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.js';
 </script>
 ```
 
