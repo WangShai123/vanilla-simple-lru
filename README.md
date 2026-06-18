@@ -13,10 +13,10 @@ npm install vanilla-simple-lru
 script:
 
 ```html
-<!-- umd GlobalName: Lru -->
+<!-- umd GlobalName: vanillaSimpleLru -->
 <script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
 <script>
-  const cache = new Lru({
+  const cache = new vanillaSimpleLru({
     maxSize: 1000,
     maxAge: 1000 * 60 * 5,
     onEviction(key, value) {

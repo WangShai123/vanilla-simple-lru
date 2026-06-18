@@ -1,6 +1,6 @@
 {
   "name": "vanilla-simple-lru",
-  "version": "0.2.5",
+  "version": "1.0.0",
   "private": false,
   "description": "A simple LRU cache implementation in vanilla JavaScript.",
   "keywords": [
@@ -44,6 +44,5 @@
   },
   "devDependencies": {
     "vite-plus": "^0.1.23"
-  },
-  "fullname": "vanilla-simple-lru"
+  }
 }
