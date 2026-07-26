@@ -1,20 +1,76 @@
 const defaultMaxAge = Number.POSITIVE_INFINITY;
+const nodeInspectCustom: unique symbol = Symbol.for(
+  'nodejs.util.inspect.custom'
+) as never;
 
-const isCacheValue = (value) =>
+export type EvictionHandler<KeyType = unknown, ValueType = unknown> = (
+  key: KeyType,
+  value: ValueType
+) => void;
+
+type RequiredMaxSize = {
+  maxSize: number;
+  max?: number;
+};
+
+type RequiredLegacyMax = {
+  max: number;
+  maxSize?: number;
+};
+
+type LruCommonOptions<KeyType, ValueType> = {
+  maxAge?: number;
+  ttl?: number;
+  onEviction?: EvictionHandler<KeyType, ValueType>;
+};
+
+export type LruOptions<KeyType = unknown, ValueType = unknown> = (
+  | RequiredMaxSize
+  | RequiredLegacyMax
+) &
+  LruCommonOptions<KeyType, ValueType>;
+
+export type LruSetOptions = {
+  maxAge?: number;
+};
+
+type LruOptionsShape<KeyType, ValueType> = Partial<
+  RequiredMaxSize & RequiredLegacyMax & LruCommonOptions<KeyType, ValueType>
+>;
+
+type ResolvedOptions<KeyType, ValueType> = {
+  maxSize: number;
+  maxAge: number;
+  onEviction?: EvictionHandler<KeyType, ValueType>;
+};
+
+type CacheItem<ValueType> = {
+  value: ValueType;
+  expiry: number;
+};
+
+const isCacheValue = <ValueType>(
+  value: unknown
+): value is CacheItem<ValueType> =>
   typeof value === 'object' &&
   value !== null &&
   Object.prototype.hasOwnProperty.call(value, 'value') &&
   Object.prototype.hasOwnProperty.call(value, 'expiry');
 
-const normalizeMaxSize = (maxSize) => {
-  if (!Number.isInteger(maxSize) || maxSize < 1 || !Number.isFinite(maxSize)) {
+const normalizeMaxSize = (maxSize: unknown): number => {
+  if (
+    typeof maxSize !== 'number' ||
+    !Number.isInteger(maxSize) ||
+    maxSize < 1 ||
+    !Number.isFinite(maxSize)
+  ) {
     throw new TypeError('`maxSize` must be a positive integer.');
   }
 
   return maxSize;
 };
 
-const normalizeMaxAge = (maxAge) => {
+const normalizeMaxAge = (maxAge: unknown): number => {
   if (typeof maxAge !== 'number' || Number.isNaN(maxAge) || maxAge <= 0) {
     throw new TypeError('`maxAge` must be a number greater than 0.');
   }
@@ -22,13 +78,16 @@ const normalizeMaxAge = (maxAge) => {
   return maxAge;
 };
 
-const resolveOptions = (options = {}) => {
+const resolveOptions = <KeyType, ValueType>(
+  options: unknown = {}
+): ResolvedOptions<KeyType, ValueType> => {
   if (options === null || typeof options !== 'object') {
     throw new TypeError('Expected an options object.');
   }
 
-  const maxSize = options.maxSize ?? options.max;
-  const maxAge = options.maxAge ?? options.ttl ?? defaultMaxAge;
+  const typedOptions = options as LruOptionsShape<KeyType, ValueType>;
+  const maxSize = typedOptions.maxSize ?? typedOptions.max;
+  const maxAge = typedOptions.maxAge ?? typedOptions.ttl ?? defaultMaxAge;
 
   if (maxSize === undefined) {
     throw new TypeError('`maxSize` is required.');
@@ -37,13 +96,17 @@ const resolveOptions = (options = {}) => {
   return {
     maxSize: normalizeMaxSize(maxSize),
     maxAge: normalizeMaxAge(maxAge),
-    onEviction: options.onEviction,
+    onEviction: typedOptions.onEviction,
   };
 };
 
-const isStale = (item) => item.expiry <= Date.now();
+const isStale = <ValueType>(item: CacheItem<ValueType>): boolean =>
+  item.expiry <= Date.now();
 
-const toCacheItem = (value, maxAge = defaultMaxAge) => ({
+const toCacheItem = <ValueType>(
+  value: ValueType,
+  maxAge = defaultMaxAge
+): CacheItem<ValueType> => ({
   value,
   expiry:
     maxAge === Number.POSITIVE_INFINITY
@@ -51,17 +114,22 @@ const toCacheItem = (value, maxAge = defaultMaxAge) => ({
       : Date.now() + maxAge,
 });
 
-export default class Lru extends Map {
-  #cache = new Map();
-  #oldCache = new Map();
-  #maxSize;
-  #maxAge;
-  #onEviction;
+export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
+  KeyType,
+  ValueType
+> {
+  #cache = new Map<KeyType, CacheItem<ValueType>>();
+  #oldCache = new Map<KeyType, CacheItem<ValueType>>();
+  #maxSize: number;
+  #maxAge: number;
+  #onEviction?: EvictionHandler<KeyType, ValueType>;
 
-  constructor(options) {
+  constructor(options: LruOptions<KeyType, ValueType>) {
     super();
 
-    const { maxSize, maxAge, onEviction } = resolveOptions(options);
+    const { maxSize, maxAge, onEviction } = resolveOptions<KeyType, ValueType>(
+      options
+    );
 
     if (onEviction !== undefined && typeof onEviction !== 'function') {
       throw new TypeError('`onEviction` must be a function.');
@@ -72,23 +140,23 @@ export default class Lru extends Map {
     this.#onEviction = onEviction;
   }
 
-  get maxSize() {
+  get maxSize(): number {
     return this.#maxSize;
   }
 
-  get max() {
+  get max(): number {
     return this.#maxSize;
   }
 
-  get maxAge() {
+  get maxAge(): number {
     return this.#maxAge;
   }
 
-  get ttl() {
+  get ttl(): number {
     return this.#maxAge;
   }
 
-  get size() {
+  get size(): number {
     if (!this.#cache.size) {
       return this.#oldCache.size;
     }
@@ -104,16 +172,19 @@ export default class Lru extends Map {
     return Math.min(this.#cache.size + oldCacheSize, this.#maxSize);
   }
 
-  get(key) {
+  get(key: KeyType): ValueType | undefined {
     if (this.#cache.has(key)) {
       const item = this.#cache.get(key);
-      return this.#getItemValue(key, item);
+
+      if (item !== undefined) {
+        return this.#getItemValue(key, item);
+      }
     }
 
     if (this.#oldCache.has(key)) {
       const item = this.#oldCache.get(key);
 
-      if (!this.#deleteIfStale(key, item)) {
+      if (item !== undefined && !this.#deleteIfStale(key, item)) {
         this.#moveToRecent(key, item);
         return item.value;
       }
@@ -122,9 +193,8 @@ export default class Lru extends Map {
     return undefined;
   }
 
-  set(key, value, { maxAge = this.#maxAge } = {}) {
-    maxAge = normalizeMaxAge(maxAge);
-
+  set(key: KeyType, value: ValueType, options: LruSetOptions = {}): this {
+    const maxAge = normalizeMaxAge(options.maxAge ?? this.#maxAge);
     const item = toCacheItem(value, maxAge);
 
     if (this.#cache.has(key)) {
@@ -136,7 +206,7 @@ export default class Lru extends Map {
     return this;
   }
 
-  has(key) {
+  has(key: KeyType): boolean {
     const item = this.#peekItem(key);
 
     if (item === undefined) {
@@ -151,7 +221,7 @@ export default class Lru extends Map {
     return true;
   }
 
-  peek(key) {
+  peek(key: KeyType): ValueType | undefined {
     const item = this.#peekItem(key);
 
     if (item === undefined) {
@@ -166,19 +236,19 @@ export default class Lru extends Map {
     return item.value;
   }
 
-  delete(key) {
+  delete(key: KeyType): boolean {
     const deletedFromCache = this.#cache.delete(key);
     const deletedFromOldCache = this.#oldCache.delete(key);
 
     return deletedFromCache || deletedFromOldCache;
   }
 
-  clear() {
+  clear(): void {
     this.#cache.clear();
     this.#oldCache.clear();
   }
 
-  resize(maxSize) {
+  resize(maxSize: number): void {
     maxSize = normalizeMaxSize(maxSize);
 
     const items = [...this.#entriesAscending()];
@@ -200,7 +270,7 @@ export default class Lru extends Map {
     this.#cache = new Map();
   }
 
-  evict(count = 1) {
+  evict(count = 1): void {
     const requested = Number(count);
 
     if (!requested || requested <= 0) {
@@ -221,7 +291,7 @@ export default class Lru extends Map {
     this.#cache = new Map();
   }
 
-  expiresIn(key) {
+  expiresIn(key: KeyType): number | undefined {
     const item = this.#peekItem(key);
 
     if (item === undefined) {
@@ -235,7 +305,7 @@ export default class Lru extends Map {
       : expiresIn;
   }
 
-  *entriesAscending() {
+  *entriesAscending(): IterableIterator<[KeyType, ValueType]> {
     for (const [key, item] of this.#entriesAscending()) {
       if (!isStale(item)) {
         yield [key, item.value];
@@ -243,7 +313,7 @@ export default class Lru extends Map {
     }
   }
 
-  *entriesDescending() {
+  *entriesDescending(): IterableIterator<[KeyType, ValueType]> {
     const items = [...this.#entriesAscending()];
 
     for (let index = items.length - 1; index >= 0; index--) {
@@ -255,45 +325,51 @@ export default class Lru extends Map {
     }
   }
 
-  *keys() {
+  *keys(): IterableIterator<KeyType> {
     for (const [key] of this.entriesAscending()) {
       yield key;
     }
   }
 
-  *values() {
+  *values(): IterableIterator<ValueType> {
     for (const [, value] of this.entriesAscending()) {
       yield value;
     }
   }
 
-  *entries() {
+  *entries(): IterableIterator<[KeyType, ValueType]> {
     yield* this.entriesAscending();
   }
 
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): IterableIterator<[KeyType, ValueType]> {
     yield* this.entriesAscending();
   }
 
-  forEach(callback, thisArgument = this) {
+  forEach(
+    callback: (value: ValueType, key: KeyType, cache: this) => void,
+    thisArgument?: unknown
+  ): void {
     for (const [key, value] of this.entriesAscending()) {
       callback.call(thisArgument, value, key, this);
     }
   }
 
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return 'Lru';
   }
 
-  toString() {
+  toString(): string {
     return `Lru(${this.size}/${this.#maxSize})`;
   }
 
-  [Symbol.for('nodejs.util.inspect.custom')]() {
+  [nodeInspectCustom](): string {
     return this.toString();
   }
 
-  #getItemValue(key, item) {
+  #getItemValue(
+    key: KeyType,
+    item: CacheItem<ValueType>
+  ): ValueType | undefined {
     if (!this.#deleteIfStale(key, item)) {
       return item.value;
     }
@@ -301,7 +377,7 @@ export default class Lru extends Map {
     return undefined;
   }
 
-  #setItem(key, item) {
+  #setItem(key: KeyType, item: CacheItem<ValueType>): void {
     this.#cache.set(key, item);
 
     if (this.#cache.size >= this.#maxSize) {
@@ -309,12 +385,12 @@ export default class Lru extends Map {
     }
   }
 
-  #moveToRecent(key, item) {
+  #moveToRecent(key: KeyType, item: CacheItem<ValueType>): void {
     this.#oldCache.delete(key);
     this.#setItem(key, item);
   }
 
-  #peekItem(key) {
+  #peekItem(key: KeyType): CacheItem<ValueType> | undefined {
     if (this.#cache.has(key)) {
       return this.#cache.get(key);
     }
@@ -322,14 +398,14 @@ export default class Lru extends Map {
     return this.#oldCache.get(key);
   }
 
-  #rotate() {
+  #rotate(): void {
     this.#emitEvictions(this.#oldCache);
 
     this.#oldCache = this.#cache;
     this.#cache = new Map();
   }
 
-  #deleteIfStale(key, item) {
+  #deleteIfStale(key: KeyType, item: CacheItem<ValueType>): boolean {
     if (!isStale(item)) {
       return false;
     }
@@ -348,20 +424,20 @@ export default class Lru extends Map {
     return deleted;
   }
 
-  #emitEvictions(entries) {
+  #emitEvictions(entries: Iterable<[KeyType, CacheItem<ValueType>]>): void {
     for (const [key, item] of entries) {
       this.#emitEviction(key, item);
     }
   }
 
-  #emitEviction(key, item) {
-    if (isCacheValue(item) && this.#onEviction) {
+  #emitEviction(key: KeyType, item: CacheItem<ValueType>): void {
+    if (isCacheValue<ValueType>(item) && this.#onEviction) {
       this.#onEviction(key, item.value);
     }
   }
 
-  *#entriesAscending() {
-    const newerKeys = new Set(this.#cache.keys());
+  *#entriesAscending(): IterableIterator<[KeyType, CacheItem<ValueType>]> {
+    const newerKeys = new Set<KeyType>(this.#cache.keys());
 
     for (const [key, item] of this.#oldCache) {
       if (!newerKeys.has(key) && !this.#deleteIfStale(key, item)) {

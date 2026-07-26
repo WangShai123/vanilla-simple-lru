@@ -1,41 +1,41 @@
-import { defineConfig } from 'vite-plus';
+import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   pack: {
-    entry: 'src/index.js',
-    outDir: 'dist',
-    format: ['esm', 'umd'],
-    globalName: 'vanillaSimpleLru',
-    target: 'es2020',
-    platform: 'browser',
+    entry: "src/index.ts",
+    outDir: "dist",
+    format: ["esm", "umd"],
+    globalName: "vanillaSimpleLru",
+    target: "es2020",
+    platform: "browser",
     minify: true,
     clean: true,
     outExtensions({ format }) {
       return {
-        // js: format === 'es' ? '.mjs' : '.js',
-        js: format === 'es' ? '.js' : '.js',
+        js: format === "es" ? ".js" : ".js",
       };
     },
-    dts: {
-      tsgo: true,
-    },
+    dts: true,
+    // dts: {
+    //   tsgo: true,
+    // },
     // sourcemap: true,
     exports: true,
   },
 
   lint: {
-    ignorePatterns: ['dist/**', 'node_modules/**'],
+    ignorePatterns: ["dist/**", "node_modules/**"],
     options: {
       typeAware: true,
       typeCheck: true,
     },
     rules: {
-      'no-console': ['error', { allow: ['error', 'warn'] }],
+      "no-console": ["error", { allow: ["error", "warn"] }],
     },
   },
 
   fmt: {
-    ignorePatterns: ['dist/**'],
+    ignorePatterns: ["dist/**"],
     sortPackageJson: true,
     sortImports: true,
     sortTailwindcss: true,
@@ -44,13 +44,13 @@ export default defineConfig({
     tabWidth: 2,
     useTabs: false,
     printWidth: 80,
-    trailingComma: 'es5',
-    arrowParens: 'always',
+    trailingComma: "es5",
+    arrowParens: "always",
     bracketSameLine: false,
     bracketSpacing: true,
-    embeddedLanguageFormatting: 'auto',
-    endOfLine: 'lf',
-    htmlWhitespaceSensitivity: 'css',
+    embeddedLanguageFormatting: "auto",
+    endOfLine: "lf",
+    htmlWhitespaceSensitivity: "css",
     insertFinalNewline: true,
   },
 });
