@@ -13,10 +13,10 @@ npm install vanilla-simple-lru
 script:
 
 ```html
-<!-- umd 全局变量 vanillaSimpleLru -->
-<script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
-<script>
-  const cache = new vanillaSimpleLru({
+<!-- esm 模块导入 -->
+<script type="module">
+  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.js';
+  const cache = new Lru({
     maxSize: 1000,
     maxAge: 1000 * 60 * 5,
     onEviction(key, value) {
@@ -25,10 +25,8 @@ script:
   });
 </script>
 
-<!-- esm 模块导入 -->
-<script type="module">
-  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.js';
-</script>
+<!-- umd 全局变量 vanillaSimpleLru -->
+<script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
 ```
 
 ### 文档
@@ -38,7 +36,7 @@ script:
 
 ## 测试
 
-- 文件：`tests/lru.test.js`
+- 文件：`tests/lru.test.ts`
 - 运行：`vp test`
 
 ## 兼容

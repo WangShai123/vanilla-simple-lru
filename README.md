@@ -13,10 +13,10 @@ npm install vanilla-simple-lru
 script:
 
 ```html
-<!-- umd GlobalName: vanillaSimpleLru -->
-<script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
-<script>
-  const cache = new vanillaSimpleLru({
+<!-- es module -->
+<script type="module">
+  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.js';
+  const cache = new Lru({
     maxSize: 1000,
     maxAge: 1000 * 60 * 5,
     onEviction(key, value) {
@@ -25,10 +25,8 @@ script:
   });
 </script>
 
-<!-- es module -->
-<script type="module">
-  import Lru from 'https://unpkg.com/vanilla-simple-lru/dist/index.js';
-</script>
+<!-- umd GlobalName: vanillaSimpleLru -->
+<script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
 ```
 
 ### Documentation
@@ -38,7 +36,7 @@ script:
 
 ## Test
 
-- File: `tests/lru.test.js`
+- File: `tests/lru.test.ts`
 - Run: `vp test`
 
 ## Compatibility

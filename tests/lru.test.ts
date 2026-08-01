@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 
 import Lru from '../src/index.ts';
 
-const delay = (milliseconds) =>
+const delay = (milliseconds: number) =>
   new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
@@ -205,9 +205,13 @@ describe('Lru', () => {
     expect(() => new Lru({ maxSize: 0 })).toThrow(/maxSize/);
     expect(() => new Lru({ maxSize: 1, maxAge: 0 })).toThrow(/maxAge/);
     expect(() => new Lru({ maxSize: 1, maxAge: -1 })).toThrow(/maxAge/);
-    expect(() => new Lru({ maxSize: 1, onEviction: true })).toThrow(
-      /onEviction/
-    );
+    expect(
+      () =>
+        new Lru({
+          maxSize: 1,
+          onEviction: true as never,
+        })
+    ).toThrow(/onEviction/);
 
     const cache = new Lru({ maxSize: 1 });
 

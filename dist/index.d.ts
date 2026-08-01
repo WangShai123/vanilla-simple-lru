@@ -20,7 +20,7 @@ type LruSetOptions = {
 };
 declare class Lru<KeyType = unknown, ValueType = unknown> extends Map<KeyType, ValueType> {
   #private;
-  constructor(options: LruOptions<KeyType, ValueType>);
+  constructor(options?: LruOptions<KeyType, ValueType>);
   get maxSize(): number;
   get max(): number;
   get maxAge(): number;
@@ -37,11 +37,11 @@ declare class Lru<KeyType = unknown, ValueType = unknown> extends Map<KeyType, V
   expiresIn(key: KeyType): number | undefined;
   entriesAscending(): IterableIterator<[KeyType, ValueType]>;
   entriesDescending(): IterableIterator<[KeyType, ValueType]>;
-  keys(): IterableIterator<KeyType>;
-  values(): IterableIterator<ValueType>;
-  entries(): IterableIterator<[KeyType, ValueType]>;
-  [Symbol.iterator](): IterableIterator<[KeyType, ValueType]>;
-  forEach(callback: (value: ValueType, key: KeyType, cache: this) => void, thisArgument?: unknown): void;
+  keys(): MapIterator<KeyType>;
+  values(): MapIterator<ValueType>;
+  entries(): MapIterator<[KeyType, ValueType]>;
+  [Symbol.iterator](): MapIterator<[KeyType, ValueType]>;
+  forEach(callback: (value: ValueType, key: KeyType, cache: Map<KeyType, ValueType>) => void, thisArgument?: unknown): void;
   get [Symbol.toStringTag](): string;
   toString(): string;
   [nodeInspectCustom](): string;

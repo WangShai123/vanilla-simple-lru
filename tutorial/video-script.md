@@ -130,7 +130,7 @@ setTimeout(() => {
 
 ## 6. 测试讲解
 
-画面：打开 `tests/lru.test.js`。
+画面：打开 `tests/lru.test.ts`。
 
 讲解要点：
 

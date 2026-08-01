@@ -1,6 +1,6 @@
 {
   "name": "vanilla-simple-lru",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "description": "A simple LRU cache implementation in vanilla JavaScript.",
   "keywords": [
@@ -21,7 +21,7 @@
   },
   "files": [
     "dist",
-    "src/index.ts"
+    "src"
   ],
   "type": "module",
   "main": "./dist/index.js",

@@ -124,7 +124,7 @@ export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
   #maxAge: number;
   #onEviction?: EvictionHandler<KeyType, ValueType>;
 
-  constructor(options: LruOptions<KeyType, ValueType>) {
+  constructor(options?: LruOptions<KeyType, ValueType>) {
     super();
 
     const { maxSize, maxAge, onEviction } = resolveOptions<KeyType, ValueType>(
@@ -325,28 +325,28 @@ export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
     }
   }
 
-  *keys(): IterableIterator<KeyType> {
-    for (const [key] of this.entriesAscending()) {
-      yield key;
-    }
+  keys(): MapIterator<KeyType> {
+    return this.#keys() as MapIterator<KeyType>;
   }
 
-  *values(): IterableIterator<ValueType> {
-    for (const [, value] of this.entriesAscending()) {
-      yield value;
-    }
+  values(): MapIterator<ValueType> {
+    return this.#values() as MapIterator<ValueType>;
   }
 
-  *entries(): IterableIterator<[KeyType, ValueType]> {
-    yield* this.entriesAscending();
+  entries(): MapIterator<[KeyType, ValueType]> {
+    return this.entriesAscending() as MapIterator<[KeyType, ValueType]>;
   }
 
-  *[Symbol.iterator](): IterableIterator<[KeyType, ValueType]> {
-    yield* this.entriesAscending();
+  [Symbol.iterator](): MapIterator<[KeyType, ValueType]> {
+    return this.entries();
   }
 
   forEach(
-    callback: (value: ValueType, key: KeyType, cache: this) => void,
+    callback: (
+      value: ValueType,
+      key: KeyType,
+      cache: Map<KeyType, ValueType>
+    ) => void,
     thisArgument?: unknown
   ): void {
     for (const [key, value] of this.entriesAscending()) {
@@ -449,6 +449,18 @@ export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
       if (!this.#deleteIfStale(key, item)) {
         yield [key, item];
       }
+    }
+  }
+
+  *#keys(): IterableIterator<KeyType> {
+    for (const [key] of this.entriesAscending()) {
+      yield key;
+    }
+  }
+
+  *#values(): IterableIterator<ValueType> {
+    for (const [, value] of this.entriesAscending()) {
+      yield value;
     }
   }
 }
