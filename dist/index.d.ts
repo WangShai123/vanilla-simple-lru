@@ -46,5 +46,6 @@ declare class Lru<KeyType = unknown, ValueType = unknown> extends Map<KeyType, V
   toString(): string;
   [nodeInspectCustom](): string;
 }
+declare const createLru: <KeyType = unknown, ValueType = unknown>(options: LruOptions<KeyType, ValueType>) => Lru<KeyType, ValueType>;
 //#endregion
-export { EvictionHandler, LruOptions, LruSetOptions, Lru as default };
+export { EvictionHandler, Lru, Lru as default, LruOptions, LruSetOptions, createLru };

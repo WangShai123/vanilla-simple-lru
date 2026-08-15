@@ -17,7 +17,9 @@ function createLru(options) {
 }
 ```
 
-But a pure functional implementation cannot honestly be a native `Map` subclass. It would either return a plain object with similar methods or use a `Proxy`, which adds complexity and weakens compatibility. For this package, `class Lru extends Map` is the better default. A tiny factory helper can still be added later if the public API should feel more functional.
+But a pure functional implementation cannot honestly be a native `Map` subclass. It would either return a plain object with similar methods or use a `Proxy`, which adds complexity and weakens compatibility.
+
+For this package, `class Lru extends Map` is the better default.
 
 ## Why two maps
 

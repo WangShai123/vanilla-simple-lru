@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 
-import Lru from '../src/index.ts';
+import Lru, { createLru } from '../src/index.ts';
 
 const delay = (milliseconds: number) =>
   new Promise((resolve) => {
@@ -8,6 +8,20 @@ const delay = (milliseconds: number) =>
   });
 
 describe('Lru', () => {
+  it('creates new Lru instances from the factory function', () => {
+    const cache = createLru<string, number>({ maxSize: 2 });
+
+    cache.set('a', 1).set('b', 2);
+
+    expect(cache).toBeInstanceOf(Lru);
+    expect(cache).toBeInstanceOf(Map);
+    expect(cache.peek('a')).toBe(1);
+    expect([...cache.entries()]).toEqual([
+      ['a', 1],
+      ['b', 2],
+    ]);
+  });
+
   it('extends Map and exposes Map-compatible APIs', () => {
     const cache = new Lru({ maxSize: 3 });
 

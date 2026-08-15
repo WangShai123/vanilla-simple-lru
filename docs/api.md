@@ -1,9 +1,9 @@
 # vanilla-simple-lru API
 
-`vanilla-simple-lru` is a zero-dependency LRU cache for browser-side JavaScript. The exported `Lru` class extends the native `Map`, so it keeps the familiar `Map` surface while adding bounded capacity, LRU promotion, optional expiration, and eviction hooks.
+`vanilla-simple-lru` is a zero-dependency LRU cache for JavaScript. The exported `Lru` class extends the native `Map`, so it keeps the familiar `Map` surface while adding bounded capacity, LRU promotion, optional expiration, and eviction hooks. The named `createLru()` factory returns the same `Lru` instance type when you prefer a function entry.
 
 ```js
-import Lru from 'vanilla-simple-lru';
+import Lru, { createLru } from 'vanilla-simple-lru';
 
 const cache = new Lru({
   maxSize: 1000,
@@ -15,6 +15,8 @@ const cache = new Lru({
 
 cache.set('/api/user', { name: 'Ada' });
 cache.get('/api/user');
+
+const factoryCache = createLru({ maxSize: 1000 });
 ```
 
 ## Constructor
@@ -22,6 +24,14 @@ cache.get('/api/user');
 ```js
 new Lru(options);
 ```
+
+## Factory
+
+```js
+createLru(options);
+```
+
+Returns a new `Lru` instance. It accepts the same options as the constructor and preserves the full `Lru` and `Map` API surface.
 
 ### options.maxSize
 
@@ -125,4 +135,4 @@ The cache uses a two-`Map` design:
 
 When the current segment reaches `maxSize`, it becomes the old segment and the previous old segment is evicted. This keeps normal operations very cheap: `get()`, `set()`, `has()`, and `delete()` remain close to native `Map` operations with small constant overhead.
 
-This design is intentionally lightweight and browser-friendly. It does not use timers to remove expired entries; expiration is lazy and is checked when keys are read, inspected, or iterated.
+This design is intentionally lightweight. It does not use timers to remove expired entries; expiration is lazy and is checked when keys are read, inspected, or iterated.

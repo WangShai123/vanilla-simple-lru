@@ -1,9 +1,9 @@
 # vanilla-simple-lru API
 
-`vanilla-simple-lru` 是一个零依赖的浏览器端 JavaScript LRU 缓存。导出的 `Lru` 类继承自原生 `Map`，因此保留了熟悉的 `Map` 接口，同时添加了有界容量、LRU 提升、可选过期和驱逐钩子功能。
+`vanilla-simple-lru` 是一个零依赖的 JavaScript LRU 缓存。导出的 `Lru` 类继承自原生 `Map`，因此保留了熟悉的 `Map` 接口，同时添加了有界容量、LRU 提升、可选过期和驱逐钩子功能。如果偏好函数入口，也可以使用命名导出的 `createLru()` 工厂函数，它返回同样的 `Lru` 实例类型。
 
 ```js
-import Lru from 'vanilla-simple-lru';
+import Lru, { createLru } from 'vanilla-simple-lru';
 
 const cache = new Lru({
   maxSize: 1000,
@@ -15,6 +15,8 @@ const cache = new Lru({
 
 cache.set('/api/user', { name: 'Ada' });
 cache.get('/api/user');
+
+const factoryCache = createLru({ maxSize: 1000 });
 ```
 
 ## 构造函数
@@ -22,6 +24,14 @@ cache.get('/api/user');
 ```js
 new Lru(options);
 ```
+
+## 工厂函数
+
+```js
+createLru(options);
+```
+
+返回一个新的 `Lru` 实例。它接受与构造函数相同的参数，并保留完整的 `Lru` 与 `Map` API。
 
 ### options.maxSize
 
@@ -125,4 +135,4 @@ for (const [key, value] of cache.entriesAscending()) {
 
 当当前段达到 `maxSize` 时，它变为旧段，之前的旧段被驱逐。这使得常规操作非常廉价：`get()`、`set()`、`has()` 和 `delete()` 保持接近原生 `Map` 操作，仅有较小的常量开销。
 
-这种设计特意保持轻量级且对浏览器友好。它不使用定时器来移除过期条目；过期是惰性的，在读取、检查或迭代键时进行检查。
+这种设计特意保持轻量级。它不使用定时器来移除过期条目；过期是惰性的，在读取、检查或迭代键时进行检查。

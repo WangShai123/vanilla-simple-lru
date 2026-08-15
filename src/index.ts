@@ -49,14 +49,6 @@ type CacheItem<ValueType> = {
   expiry: number;
 };
 
-const isCacheValue = <ValueType>(
-  value: unknown
-): value is CacheItem<ValueType> =>
-  typeof value === 'object' &&
-  value !== null &&
-  Object.prototype.hasOwnProperty.call(value, 'value') &&
-  Object.prototype.hasOwnProperty.call(value, 'expiry');
-
 const normalizeMaxSize = (maxSize: unknown): number => {
   if (
     typeof maxSize !== 'number' ||
@@ -114,7 +106,7 @@ const toCacheItem = <ValueType>(
       : Date.now() + maxAge,
 });
 
-export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
+export class Lru<KeyType = unknown, ValueType = unknown> extends Map<
   KeyType,
   ValueType
 > {
@@ -431,9 +423,7 @@ export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
   }
 
   #emitEviction(key: KeyType, item: CacheItem<ValueType>): void {
-    if (isCacheValue<ValueType>(item) && this.#onEviction) {
-      this.#onEviction(key, item.value);
-    }
+    this.#onEviction?.(key, item.value);
   }
 
   *#entriesAscending(): IterableIterator<[KeyType, CacheItem<ValueType>]> {
@@ -464,3 +454,9 @@ export default class Lru<KeyType = unknown, ValueType = unknown> extends Map<
     }
   }
 }
+
+export const createLru = <KeyType = unknown, ValueType = unknown>(
+  options: LruOptions<KeyType, ValueType>
+): Lru<KeyType, ValueType> => new Lru<KeyType, ValueType>(options);
+
+export default Lru;

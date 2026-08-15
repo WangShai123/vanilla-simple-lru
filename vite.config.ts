@@ -6,7 +6,7 @@ export default defineConfig({
     outDir: 'dist',
     format: ['esm', 'umd'],
     globalName: 'vanillaSimpleLru',
-    target: 'es2020',
+    target: 'es2022',
     platform: 'browser',
     minify: true,
     clean: true,
@@ -17,7 +17,7 @@ export default defineConfig({
     },
     dts: true,
     exports: true,
-    // sourcemap: true,
+    sourcemap: false,
   },
 
   lint: {

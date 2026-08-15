@@ -1,6 +1,6 @@
 {
   "name": "vanilla-simple-lru",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "A simple LRU cache implementation in vanilla JavaScript.",
   "keywords": [
@@ -20,8 +20,7 @@
     "url": "git+https://github.com/WangShai123/vanilla-simple-lru.git"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "type": "module",
   "main": "./dist/index.js",
@@ -38,6 +37,7 @@
   },
   "scripts": {
     "build": "vp pack",
+    "pack": "vp check --fix && vp pack",
     "dev": "vp dev",
     "test": "vp test",
     "check": "vp check",
@@ -45,6 +45,7 @@
     "prepublishOnly": "vp run build"
   },
   "devDependencies": {
+    "typescript": "^7.0.2",
     "vite-plus": "latest"
   }
 }
