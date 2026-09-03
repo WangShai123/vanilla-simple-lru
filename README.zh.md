@@ -1,6 +1,6 @@
-# Simple LRU Cache
+# LRU Cache
 
-`vanilla-simple-lru` 是一个零依赖的 JavaScript LRU 缓存。导出的 `Lru` 类继承自原生 `Map`，因此保留了熟悉的 `Map` 接口，同时添加了有界容量、LRU 提升、可选过期和驱逐钩子功能。也可以使用命名导出的 `createLru()` 工厂函数创建新实例。
+`vanilla-lru` 是一个零依赖的 JavaScript LRU 缓存。导出的 `Lru` 类继承自原生 `Map`，因此保留了熟悉的 `Map` 接口，同时添加了有界容量、LRU 提升、可选过期和驱逐钩子功能。也可以使用命名导出的 `createLru()` 工厂函数创建新实例。
 
 [English](./README.md)
 
@@ -9,7 +9,7 @@
 npm:
 
 ```bash
-npm install vanilla-simple-lru
+npm install vanilla-lru
 ```
 
 script:
@@ -17,7 +17,7 @@ script:
 ```html
 <!-- esm 模块导入 -->
 <script type="module">
-  import { createLru } from 'https://unpkg.com/vanilla-simple-lru/dist/index.js';
+  import { createLru } from 'https://unpkg.com/vanilla-lru/dist/index.js';
   const cache = createLru({
     maxSize: 1000,
     maxAge: 1000 * 60 * 5,
@@ -27,8 +27,8 @@ script:
   });
 </script>
 
-<!-- umd 全局变量 vanillaSimpleLru -->
-<script src="https://unpkg.com/vanilla-simple-lru/dist/index.umd.js"></script>
+<!-- umd 全局变量 vanillaLru -->
+<script src="https://unpkg.com/vanilla-lru/dist/index.umd.js"></script>
 ```
 
 ### 文档

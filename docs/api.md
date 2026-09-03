@@ -1,9 +1,9 @@
-# vanilla-simple-lru API
+# vanilla-lru API
 
-`vanilla-simple-lru` is a zero-dependency LRU cache for JavaScript. The exported `Lru` class extends the native `Map`, so it keeps the familiar `Map` surface while adding bounded capacity, LRU promotion, optional expiration, and eviction hooks. The named `createLru()` factory returns the same `Lru` instance type when you prefer a function entry.
+`vanilla-lru` is a zero-dependency LRU cache for JavaScript. The exported `Lru` class extends the native `Map`, so it keeps the familiar `Map` surface while adding bounded capacity, LRU promotion, optional expiration, and eviction hooks. The named `createLru()` factory returns the same `Lru` instance type when you prefer a function entry.
 
 ```js
-import Lru, { createLru } from 'vanilla-simple-lru';
+import Lru, { createLru } from 'vanilla-lru';
 
 const cache = new Lru({
   maxSize: 1000,

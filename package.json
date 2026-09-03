@@ -1,23 +1,23 @@
 {
-  "name": "vanilla-simple-lru",
-  "version": "1.0.3",
+  "name": "vanilla-lru",
+  "version": "1.0.0",
   "private": false,
-  "description": "A simple LRU cache implementation in vanilla JavaScript.",
+  "description": "A vanilla JavaScript LRU cache.",
   "keywords": [
     "cache",
     "javascript",
     "lru",
     "vanilla"
   ],
-  "homepage": "https://github.com/WangShai123/vanilla-simple-lru",
+  "homepage": "https://github.com/WangShai123/vanilla-lru",
   "bugs": {
-    "url": "https://github.com/WangShai123/vanilla-simple-lru/issues"
+    "url": "https://github.com/WangShai123/vanilla-lru/issues"
   },
   "license": "ISC",
   "author": "Wang Shai <hiwangshai@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WangShai123/vanilla-simple-lru.git"
+    "url": "git+https://github.com/WangShai123/vanilla-lru.git"
   },
   "files": [
     "dist"
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "typescript": "^7.0.2",
-    "vite-plus": "latest"
+    "vite-plus": "^0.2.9"
   },
   "devEngines": {
     "packageManager": {

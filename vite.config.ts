@@ -5,7 +5,7 @@ export default defineConfig({
     entry: 'src/index.ts',
     outDir: 'dist',
     format: ['esm', 'umd'],
-    globalName: 'vanillaSimpleLru',
+    globalName: 'vanillaLru',
     target: 'es2022',
     platform: 'browser',
     minify: true,

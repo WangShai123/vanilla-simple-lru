@@ -1,4 +1,4 @@
-# vanilla-simple-lru 视频教程脚本
+# vanilla-lru 视频教程脚本
 
 ## 目标观众
 
